@@ -1,0 +1,126 @@
+name: release
+
+# Pushing a version tag (e.g. `git tag v1.2.3 && git push origin v1.2.3`):
+#   1. runs the tests,
+#   2. builds the package with the version taken from the tag,
+#   3. publishes it to PyPI (trusted publishing, see docs/development.md),
+#   4. creates a GitHub release with the commit summaries since the previous tag.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y gettext
+          pip install build twine packaging
+      - name: Determine version from tag
+        id: version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          python - "$version" <<'EOF'
+          import sys
+          from packaging.version import InvalidVersion, Version
+          try:
+              v = Version(sys.argv[1])
+          except InvalidVersion:
+              print(f"::error::Tag {sys.argv[1]!r} is not a valid PEP 440 version")
+              sys.exit(1)
+          if str(v) != sys.argv[1]:
+              print(f"::error::Tag version {sys.argv[1]!r} is not normalized, use {str(v)!r}")
+              sys.exit(1)
+          EOF
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Set version in pyproject.toml
+        run: |
+          sed -i -E 's/^version = "0\.0\.0\.dev0"$/version = "${{ steps.version.outputs.version }}"/' pyproject.toml
+          grep -q '^version = "${{ steps.version.outputs.version }}"$' pyproject.toml \
+            || (echo "::error::Could not set version in pyproject.toml" && exit 1)
+      - name: Build sdist and wheel
+        run: python -m build
+      - name: Check package
+        run: |
+          twine check --strict dist/*
+          ls dist/*-${{ steps.version.outputs.version }}-py3-none-any.whl
+          unzip -l dist/*.whl | grep -q 'locale/de/LC_MESSAGES/django.mo' \
+            || (echo "::error::compiled translations missing from wheel" && exit 1)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-pypi:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pretix-payment-sumup/${{ needs.build.outputs.version }}/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history and tags, to find the previous release.
+          fetch-depth: 0
+      - uses: actions/download-artifact@v5
+        with:
+          name: dist
+          path: dist/
+      - name: Collect commit summaries since the previous release
+        run: |
+          previous=$(git describe --tags --abbrev=0 --match 'v*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          if [ -n "$previous" ]; then
+            range="${previous}..${GITHUB_REF_NAME}"
+            echo "## Changes since ${previous}" > notes.md
+          else
+            range="${GITHUB_REF_NAME}"
+            echo "## Changes" > notes.md
+          fi
+          echo >> notes.md
+          git log --no-merges --pretty='format:- %s (%h)' "$range" >> notes.md
+          echo >> notes.md
+          echo >> notes.md
+          echo "**PyPI:** https://pypi.org/project/pretix-payment-sumup/${{ needs.build.outputs.version }}/" >> notes.md
+          cat notes.md
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=""
+          if python3 -c "import sys,re; sys.exit(0 if re.search(r'(a|b|rc|dev)[0-9]*$', '${{ needs.build.outputs.version }}') else 1)"; then
+            prerelease="--prerelease"
+          fi
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "${{ needs.build.outputs.version }}" \
+            --notes-file notes.md \
+            --verify-tag $prerelease

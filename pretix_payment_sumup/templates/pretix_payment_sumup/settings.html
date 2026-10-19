@@ -1,0 +1,23 @@
+{% load i18n %}
+<p>
+    {% blocktrans trimmed %}
+        This payment method sends customers to the SumUp Hosted Checkout page. SumUp notifies pretix about
+        status changes through a webhook URL that is set for every checkout, so there is nothing to register
+        in the SumUp dashboard. The webhook URLs look like this:
+    {% endblocktrans %}
+</p>
+<p><code>{{ webhook_example }}</code></p>
+{% if not is_https %}
+    <div class="alert alert-warning">
+        {% blocktrans trimmed %}
+            Your shop is not served over HTTPS. SumUp only delivers webhooks to public HTTPS URLs, so payment
+            status updates will rely on customers returning to the shop and on the pretix cronjob.
+        {% endblocktrans %}
+    </div>
+{% endif %}
+<p>
+    {% blocktrans trimmed %}
+        Make sure the pretix cronjob runs regularly. It checks open SumUp payments in case a webhook was lost
+        or a customer did not return to the shop.
+    {% endblocktrans %}
+</p>

@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+        pretix: ["pretix"]
+        include:
+          # Oldest supported release
+          - python-version: "3.12"
+            pretix: "pretix==2025.1.*"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y gettext
+      - name: Install pretix and plugin
+        run: pip install '${{ matrix.pretix }}' -e '.[dev]'
+      - name: Lint
+        run: |
+          flake8 pretix_payment_sumup tests
+          isort -c pretix_payment_sumup tests
+      - name: Check translations compile
+        run: find pretix_payment_sumup/locale -name '*.po' -exec msgfmt --check -o /dev/null {} \;
+      - name: Test
+        run: pytest
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install 'mkdocs>=1.6,<2' 'mkdocs-material>=9.5'
+      - run: mkdocs build --strict

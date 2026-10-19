@@ -1,0 +1,295 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pretix-payment-sumup\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-19 10:43+0000\n"
+"PO-Revision-Date: 2026-10-19 12:00+0200\n"
+"Last-Translator: Stefan Bethke <stb@lassitu.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "SumUp Hosted Checkout"
+msgstr "SumUp Hosted Checkout"
+
+msgid ""
+"Accept card payments, Apple Pay and Google Pay through the SumUp Hosted "
+"Checkout page."
+msgstr ""
+"Akzeptieren Sie Kartenzahlungen, Apple Pay und Google Pay über die Hosted-"
+"Checkout-Seite von SumUp."
+
+msgid "Payment"
+msgstr "Zahlung"
+
+msgid "SumUp"
+msgstr "SumUp"
+
+msgid ""
+"A SumUp merchant code consists of upper case letters and digits, e.g. "
+"MCXXXXXX."
+msgstr ""
+"Ein SumUp-Händlercode besteht aus Großbuchstaben und Ziffern, z. B. "
+"MCXXXXXX."
+
+msgid "Credit card, Apple Pay, Google Pay"
+msgstr "Kreditkarte, Apple Pay, Google Pay"
+
+msgid ""
+"The SumUp sandbox merchant account will be used for orders placed in test "
+"mode. No real money will be transferred."
+msgstr ""
+"Für Bestellungen im Testmodus wird das SumUp-Sandbox-Händlerkonto verwendet."
+" Es wird kein echtes Geld übertragen."
+
+msgid "API key"
+msgstr "API-Schlüssel"
+
+msgid ""
+"Secret API key of your SumUp merchant account (starts with sup_sk_). Create "
+"it in the SumUp dashboard under Settings > For Developers > Toolkit > API "
+"keys."
+msgstr ""
+"Geheimer API-Schlüssel Ihres SumUp-Händlerkontos (beginnt mit sup_sk_). Sie "
+"erstellen ihn im SumUp-Dashboard unter Einstellungen > Für Entwickler > "
+"Toolkit > API-Schlüssel."
+
+msgid "Merchant code"
+msgstr "Händlercode"
+
+msgid "The merchant code (merchant ID) of your SumUp account, e.g. MCXXXXXX."
+msgstr "Der Händlercode (Händler-ID) Ihres SumUp-Kontos, z. B. MCXXXXXX."
+
+msgid "Sandbox API key"
+msgstr "Sandbox-API-Schlüssel"
+
+msgid ""
+"Optional. API key of a SumUp sandbox merchant account. It is used for orders"
+" placed while the event is in test mode. Without sandbox credentials, SumUp "
+"is not offered in test mode."
+msgstr ""
+"Optional. API-Schlüssel eines SumUp-Sandbox-Händlerkontos. Er wird für "
+"Bestellungen verwendet, die im Testmodus aufgegeben werden. Ohne Sandbox-"
+"Zugangsdaten wird SumUp im Testmodus nicht angeboten."
+
+msgid "Sandbox merchant code"
+msgstr "Sandbox-Händlercode"
+
+msgid "Checkout reference prefix"
+msgstr "Präfix für Checkout-Referenzen"
+
+msgid ""
+"Prepended to the checkout reference shown in the SumUp dashboard. Use a "
+"different prefix for every pretix installation that shares a SumUp account."
+msgstr ""
+"Wird der im SumUp-Dashboard angezeigten Checkout-Referenz vorangestellt. "
+"Verwenden Sie für jede pretix-Installation, die sich ein SumUp-Konto teilt, "
+"ein anderes Präfix."
+
+msgid "Payment method name"
+msgstr "Name der Zahlungsmethode"
+
+msgid "Shown to customers when they choose a payment method."
+msgstr "Wird Kund*innen bei der Auswahl der Zahlungsmethode angezeigt."
+
+msgid "live"
+msgstr "Live"
+
+msgid "sandbox"
+msgstr "Sandbox"
+
+#, python-format
+msgid ""
+"Please enter both the API key and the merchant code for the %(account)s "
+"account."
+msgstr ""
+"Bitte geben Sie sowohl den API-Schlüssel als auch den Händlercode für das "
+"%(account)s-Konto ein."
+
+msgid "Please enter SumUp credentials before enabling this payment method."
+msgstr ""
+"Bitte geben Sie SumUp-Zugangsdaten ein, bevor Sie diese Zahlungsmethode "
+"aktivieren."
+
+#, python-format
+msgid "SumUp rejected the API key: %(error)s"
+msgstr "SumUp hat den API-Schlüssel abgelehnt: %(error)s"
+
+#, python-format
+msgid "The API key belongs to merchant code %(actual)s, not %(configured)s."
+msgstr ""
+"Der API-Schlüssel gehört zum Händlercode %(actual)s, nicht zu "
+"%(configured)s."
+
+msgid "SumUp is not configured correctly. Please contact the event organizer."
+msgstr ""
+"SumUp ist nicht korrekt eingerichtet. Bitte wenden Sie sich an die "
+"Veranstalter*innen."
+
+msgid ""
+"We could not start the payment with SumUp. Please try again or choose "
+"another payment method."
+msgstr ""
+"Wir konnten die Zahlung bei SumUp nicht starten. Bitte versuchen Sie es "
+"erneut oder wählen Sie eine andere Zahlungsmethode."
+
+msgid ""
+"Hosted Checkout seems not to be enabled for this SumUp account. Please "
+"contact the event organizer."
+msgstr ""
+"Hosted Checkout scheint für dieses SumUp-Konto nicht aktiviert zu sein. "
+"Bitte wenden Sie sich an die Veranstalter*innen."
+
+msgid "This payment has already been completed at SumUp."
+msgstr "Diese Zahlung wurde bei SumUp bereits abgeschlossen."
+
+msgid "No SumUp transaction is known for this payment."
+msgstr "Zu dieser Zahlung ist keine SumUp-Transaktion bekannt."
+
+#, python-format
+msgid "SumUp refused the refund: %(error)s"
+msgstr "SumUp hat die Erstattung abgelehnt: %(error)s"
+
+#, python-format
+msgid ""
+"SumUp reported a paid amount of %(paid)s, but %(expected)s was expected. The"
+" payment was not confirmed automatically."
+msgstr ""
+"SumUp hat einen gezahlten Betrag von %(paid)s gemeldet, erwartet wurden "
+"%(expected)s. Die Zahlung wurde nicht automatisch bestätigt."
+
+msgid ""
+"After you place your order, you will be redirected to SumUp to complete your"
+" payment. Your order is only complete once the payment has been received."
+msgstr ""
+"Nachdem Sie Ihre Bestellung aufgegeben haben, werden Sie zu SumUp "
+"weitergeleitet, um die Zahlung abzuschließen. Ihre Bestellung ist erst "
+"abgeschlossen, wenn die Zahlung eingegangen ist."
+
+msgid ""
+"After you confirm your order, you will be redirected to the secure payment "
+"page of our payment provider SumUp. You can pay with credit or debit card, "
+"Apple Pay, or Google Pay there."
+msgstr ""
+"Nachdem Sie Ihre Bestellung bestätigt haben, werden Sie auf die sichere "
+"Zahlungsseite unseres Zahlungsdienstleisters SumUp weitergeleitet. Dort "
+"können Sie mit Kredit- oder Debitkarte, Apple Pay oder Google Pay bezahlen."
+
+msgid "SumUp sandbox"
+msgstr "SumUp-Sandbox"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Checkout ID"
+msgstr "Checkout-ID"
+
+msgid "Checkout reference"
+msgstr "Checkout-Referenz"
+
+msgid "Checkout status"
+msgstr "Checkout-Status"
+
+msgid "Transaction code"
+msgstr "Transaktionscode"
+
+msgid "Transaction ID"
+msgstr "Transaktions-ID"
+
+msgid "Transaction status"
+msgstr "Transaktionsstatus"
+
+msgid "Payment type"
+msgstr "Zahlungsart"
+
+msgid ""
+"Your payment has not been completed yet. You can continue the payment on the"
+" SumUp payment page. The payment page is valid for 30 minutes after you "
+"placed your order."
+msgstr ""
+"Ihre Zahlung wurde noch nicht abgeschlossen. Sie können die Zahlung auf der "
+"Zahlungsseite von SumUp fortsetzen. Die Zahlungsseite ist 30 Minuten nach "
+"Aufgabe Ihrer Bestellung gültig."
+
+msgid "Continue to payment"
+msgstr "Weiter zur Zahlung"
+
+msgid "I have paid, check status"
+msgstr "Ich habe bezahlt, Status prüfen"
+
+msgid ""
+"We are waiting for confirmation of your payment from SumUp. This page will "
+"reflect the new status within a few minutes."
+msgstr ""
+"Wir warten auf die Bestätigung Ihrer Zahlung durch SumUp. Diese Seite zeigt "
+"den neuen Status innerhalb weniger Minuten an."
+
+msgid "Check status"
+msgstr "Status prüfen"
+
+msgid ""
+"This payment method sends customers to the SumUp Hosted Checkout page. SumUp"
+" notifies pretix about status changes through a webhook URL that is set for "
+"every checkout, so there is nothing to register in the SumUp dashboard. The "
+"webhook URLs look like this:"
+msgstr ""
+"Diese Zahlungsmethode leitet Kund*innen auf die Hosted-Checkout-Seite von "
+"SumUp weiter. SumUp informiert pretix über Statusänderungen über eine "
+"Webhook-URL, die für jeden Checkout einzeln übergeben wird. Im SumUp-"
+"Dashboard muss daher nichts registriert werden. Die Webhook-URLs sehen so "
+"aus:"
+
+msgid ""
+"Your shop is not served over HTTPS. SumUp only delivers webhooks to public "
+"HTTPS URLs, so payment status updates will rely on customers returning to "
+"the shop and on the pretix cronjob."
+msgstr ""
+"Ihr Shop wird nicht über HTTPS ausgeliefert. SumUp stellt Webhooks nur an "
+"öffentliche HTTPS-URLs zu. Statusänderungen werden daher nur erkannt, wenn "
+"Kund*innen in den Shop zurückkehren oder der pretix-Cronjob läuft."
+
+msgid ""
+"Make sure the pretix cronjob runs regularly. It checks open SumUp payments "
+"in case a webhook was lost or a customer did not return to the shop."
+msgstr ""
+"Stellen Sie sicher, dass der pretix-Cronjob regelmäßig läuft. Er prüft "
+"offene SumUp-Zahlungen, falls ein Webhook verloren ging oder Kund*innen "
+"nicht in den Shop zurückgekehrt sind."
+
+msgid ""
+"We could not check the status of your payment with SumUp. If you paid, your "
+"order will be updated automatically within a few minutes."
+msgstr ""
+"Wir konnten den Status Ihrer Zahlung bei SumUp nicht prüfen. Falls Sie "
+"bezahlt haben, wird Ihre Bestellung innerhalb weniger Minuten automatisch "
+"aktualisiert."
+
+msgid ""
+"Your payment was not successful. Please try again or choose another payment "
+"method."
+msgstr ""
+"Ihre Zahlung war nicht erfolgreich. Bitte versuchen Sie es erneut oder "
+"wählen Sie eine andere Zahlungsmethode."
+
+msgid ""
+"Your payment session at SumUp has expired. Please start the payment again."
+msgstr ""
+"Ihre Zahlungssitzung bei SumUp ist abgelaufen. Bitte starten Sie die Zahlung"
+" erneut."
+
+msgid ""
+"Your payment has not been completed yet. If you already paid, your order "
+"will be updated automatically within a few minutes."
+msgstr ""
+"Ihre Zahlung wurde noch nicht abgeschlossen. Falls Sie bereits bezahlt "
+"haben, wird Ihre Bestellung innerhalb weniger Minuten automatisch "
+"aktualisiert."

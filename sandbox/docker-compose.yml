@@ -1,0 +1,96 @@
+# Local pretix with the SumUp plugin for testing against a SumUp sandbox merchant account.
+#
+#   cd sandbox && docker compose up --build
+#
+# pretix:  http://localhost:8345/control/  (admin@localhost / admin)
+# Mailpit: http://localhost:8025/          (all emails sent by pretix)
+
+name: pretix-sumup-sandbox
+
+x-pretix: &pretix
+  build:
+    context: ..
+    dockerfile: sandbox/Dockerfile
+    args:
+      PRETIX_VERSION: ${PRETIX_VERSION:-stable}
+  image: pretix-sumup-sandbox:latest
+  # The official pretix image is only published for amd64.
+  platform: linux/amd64
+  environment:
+    PRETIX_PRETIX_URL: ${PRETIX_URL:-http://localhost:8345}
+  volumes:
+    - ./pretix.cfg:/etc/pretix/pretix.cfg:ro
+    - pretix-data:/data
+    # Live plugin source; restart the pretix service to pick up Python changes.
+    - ../pretix_payment_sumup:/plugin-src/pretix_payment_sumup
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_started
+
+services:
+  pretix:
+    <<: *pretix
+    command: ["all"]
+    ports:
+      - "8345:80"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/healthcheck/"]
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 30
+    restart: unless-stopped
+
+  # Runs pretix' periodic tasks every minute. This is what picks up SumUp payments when no
+  # webhook can reach the sandbox (e.g. on localhost) and the customer does not return.
+  cron:
+    <<: *pretix
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["while true; do /usr/local/bin/pretix cron; sleep 60; done"]
+    environment:
+      PRETIX_PRETIX_URL: ${PRETIX_URL:-http://localhost:8345}
+      AUTOMIGRATE: skip
+    depends_on:
+      # Wait until the pretix service has applied the database migrations.
+      pretix:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pretix
+      POSTGRES_USER: pretix
+      POSTGRES_PASSWORD: pretix
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pretix"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+
+  mailpit:
+    image: axllent/mailpit:v1.31
+    ports:
+      - "8025:8025"
+
+  # Optional: public HTTPS URL so that SumUp can deliver webhooks.
+  #   docker compose --profile tunnel up -d tunnel
+  #   docker compose logs tunnel   # look for https://<random>.trycloudflare.com
+  # Then put that URL into PRETIX_URL in .env and run `docker compose up -d` again.
+  tunnel:
+    image: cloudflare/cloudflared:2026.10.1
+    command: ["tunnel", "--no-autoupdate", "--url", "http://pretix:80"]
+    profiles: ["tunnel"]
+    depends_on:
+      - pretix
+
+volumes:
+  pretix-data:
+  postgres-data:

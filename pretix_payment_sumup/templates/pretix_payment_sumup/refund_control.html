@@ -1,0 +1,11 @@
+{% load i18n %}
+<dl class="dl-horizontal">
+    {% if info.transaction_id %}
+        <dt>{% trans "Transaction ID" %}</dt>
+        <dd>{{ info.transaction_id }}</dd>
+    {% endif %}
+    {% if info.error %}
+        <dt>{% trans "Error" %}</dt>
+        <dd class="text-danger">{{ info.error }}</dd>
+    {% endif %}
+</dl>

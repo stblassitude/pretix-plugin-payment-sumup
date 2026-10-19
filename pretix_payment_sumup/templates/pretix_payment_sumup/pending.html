@@ -1,0 +1,25 @@
+{% load i18n %}
+{% if checkout_status == "PENDING" and hosted_checkout_url %}
+    <p>
+        {% blocktrans trimmed %}
+            Your payment has not been completed yet. You can continue the payment on the SumUp payment page.
+            The payment page is valid for 30 minutes after you placed your order.
+        {% endblocktrans %}
+    </p>
+    <p>
+        <a href="{{ hosted_checkout_url }}" class="btn btn-primary">{% trans "Continue to payment" %}</a>
+        {% if return_url %}
+            <a href="{{ return_url }}" class="btn btn-default">{% trans "I have paid, check status" %}</a>
+        {% endif %}
+    </p>
+{% else %}
+    <p>
+        {% blocktrans trimmed %}
+            We are waiting for confirmation of your payment from SumUp. This page will reflect the new status
+            within a few minutes.
+        {% endblocktrans %}
+    </p>
+    {% if return_url %}
+        <p><a href="{{ return_url }}" class="btn btn-default">{% trans "Check status" %}</a></p>
+    {% endif %}
+{% endif %}

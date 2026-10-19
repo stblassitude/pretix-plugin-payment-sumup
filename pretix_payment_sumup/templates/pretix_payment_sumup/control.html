@@ -1,0 +1,33 @@
+{% load i18n %}
+{% if sandbox %}
+    <p><span class="label label-warning">{% trans "SumUp sandbox" %}</span></p>
+{% endif %}
+{% if error %}
+    <p class="text-danger">{% trans "Error" %}: {{ error }}</p>
+{% endif %}
+{% if checkout %}
+<dl class="dl-horizontal">
+    <dt>{% trans "Checkout ID" %}</dt>
+    <dd>{{ checkout.id }}</dd>
+    <dt>{% trans "Checkout reference" %}</dt>
+    <dd>{{ checkout.checkout_reference }}</dd>
+    <dt>{% trans "Checkout status" %}</dt>
+    <dd>{{ checkout.status }}</dd>
+    {% if checkout.merchant_code %}
+        <dt>{% trans "Merchant code" %}</dt>
+        <dd>{{ checkout.merchant_code }}</dd>
+    {% endif %}
+    {% if transaction.transaction_code %}
+        <dt>{% trans "Transaction code" %}</dt>
+        <dd>{{ transaction.transaction_code }}</dd>
+        <dt>{% trans "Transaction ID" %}</dt>
+        <dd>{{ transaction.id }}</dd>
+        <dt>{% trans "Transaction status" %}</dt>
+        <dd>{{ transaction.status }}</dd>
+    {% endif %}
+    {% if transaction.payment_type %}
+        <dt>{% trans "Payment type" %}</dt>
+        <dd>{{ transaction.payment_type }}{% if transaction.entry_mode %} ({{ transaction.entry_mode }}){% endif %}</dd>
+    {% endif %}
+</dl>
+{% endif %}
